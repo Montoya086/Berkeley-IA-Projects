@@ -129,10 +129,34 @@ def depthFirstSearch(problem):
     # If no solution is found, return an empty list
     return []
 
+# BFS algorithm
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Crete a queue to store the state and the actions taken to reach that state, made so the algorithm searches the shallowest nodes first
+    queue = util.Queue()
+    queue.push((problem.getStartState(),[]))
+    
+    # Set to store the visited states
+    visited = set()
+    
+    while not queue.isEmpty():
+        # Pop the state and actions from the queue
+        state,actions = queue.pop()
+
+        # Verify if the state is the goal state
+        if problem.isGoalState(state):
+            return actions  
+
+        # Add the state to the visited set
+        if state not in visited:
+            visited.add(state) 
+
+            # For each child of the state, push the child and the actions taken to reach that child to the queue
+            for child, action, _ in problem.expand(state):
+                if child not in visited:
+                    newActions = actions+ [action]
+                    queue.push((child,newActions))
+
+    return []
 
 def nullHeuristic(state, problem=None):
     """
