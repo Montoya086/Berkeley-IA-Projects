@@ -159,16 +159,40 @@ def breadthFirstSearch(problem):
     return []
 
 def nullHeuristic(state, problem=None):
-    """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
-    """
     return 0
 
+# A* algorithm
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Create a priority queue to store the state, the actions taken to reach that state and the cost to reach that state
+    queue = util.PriorityQueue()
+    startState = problem.getStartState()
+    queue.push((startState, [], 0), 0)  
+    
+    # Set to store the visited states
+    visited = set()
+    
+    while not queue.isEmpty():
+        # Pop the state, actions and current cost from the queue
+        state, actions, currentCost = queue.pop()
+
+        # Verify if the state is the goal state
+        if problem.isGoalState(state):
+            return actions  
+
+        # Add the state to the visited set
+        if state not in visited:
+            visited.add(state) 
+
+            # For each child of the state, push the child and the actions taken to reach that child to the queue
+            for child, action, stepCost in problem.expand(state):
+                if child not in visited:
+                    # Calculate the new cost and priority for the child
+                    newCost = currentCost+stepCost
+                    priority = newCost + heuristic(child, problem)
+                    
+                    queue.push((child, actions+[action], newCost), priority)
+
+    return []
 
 
 # Abbreviations
