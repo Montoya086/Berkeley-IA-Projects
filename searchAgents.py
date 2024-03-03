@@ -315,14 +315,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # El estado inicial es la posicion de pacman y las esquinas visitadas
+        return (self.startingPosition, ())
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # El estado es final si se han visitado las 4 esquinas
+        return len(state[1]) == 4
 
     def expand(self, state):
         """
@@ -340,6 +342,20 @@ class CornersProblem(search.SearchProblem):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
+            
+            # Se define el nuevo estado luego de la accion
+            next_state = self.getNextState(state, action)
+            
+            # Si la nueva posicion es una esquina y no ha sido visitada, se agrega a las esquinas visitadas
+            visited_corners = state[1]
+            if next_state[0] in self.corners and next_state[0] not in visited_corners:
+                visited_corners += (next_state[0],)
+            
+            # Se crea el nuevo estado con las esquinas visitadas
+            new_state = (next_state[0], visited_corners)
+            
+            # Se agrega el nuevo estado a la lista de hijos, junto con el costo de la accion
+            children.append((new_state, action, self.getActionCost(state, action, next_state)))
 
         self._expanded += 1 # DO NOT CHANGE
         return children
@@ -367,7 +383,8 @@ class CornersProblem(search.SearchProblem):
         dx, dy = Actions.directionToVector(action)
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # El nuevo estado es la nueva posicion
+        return ((nextx, nexty), state[1])
 
     def getCostOfActionSequence(self, actions):
         """
