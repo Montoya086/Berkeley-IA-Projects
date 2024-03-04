@@ -560,7 +560,25 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    
+    # Se obtiene la lista de posiciones de la comida
+    foodList = foodGrid.asList()
+    
+    distances = []
+    
+    # Si no hay comida, la heuristica es 0
+    if problem.isGoalState(state):
+        return 0
+    
+    for food in foodList:
+        # Se calcula la distancia basada en el algoritmo BFS a cada comida
+        distance = mazeDistance(position, food, problem.startingGameState)
+        distances.append(distance)
+
+    # La heuristica es la distancia maxima a la comida
+    heuristic = max(distances)
+
+    return heuristic
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
